@@ -10,8 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.CalendarActivity"
-            android:label="@string/title_activity_calendar">
+            android:name=".activity.CalendarActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
