@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">G2u-Calendar</string>
+
+
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="nav_title_monthly">월</string>
+    <string name="nav_title_weekly">주</string>
+    <string name="nav_title_daily">일</string>
 </resources>
