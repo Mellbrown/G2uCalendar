@@ -1,4 +1,6 @@
 package me.myds.g2u.g2u_calendar.fragment;
 
-public class WeeklyFragment {
+import android.support.v4.app.Fragment;
+
+public class WeeklyFragment extends Fragment{
 }
