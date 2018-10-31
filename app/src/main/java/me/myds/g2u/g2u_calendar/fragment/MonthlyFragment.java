@@ -23,10 +23,6 @@ import java.util.ArrayList;
 import me.myds.g2u.g2u_calendar.R;
 
 public class MonthlyFragment extends Fragment{
-
-    private TextView txtMonth;
-    private FloatingActionButton btnPrev;
-    private FloatingActionButton btnNext;
     private TableLayout table;
 
     private ArrayList<TableRow> tableRows = new ArrayList<>();
@@ -37,9 +33,6 @@ public class MonthlyFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewLayout = inflater.inflate(R.layout.fragment_monthly, container,false);
 
-        txtMonth = viewLayout.findViewById(R.id.txtMonth);
-        btnPrev = viewLayout.findViewById(R.id.btnPrev);
-        btnNext = viewLayout.findViewById(R.id.btnNext);
         table = viewLayout.findViewById(R.id.table);
 
         for(int i = 0 ; 6 > i; i++){

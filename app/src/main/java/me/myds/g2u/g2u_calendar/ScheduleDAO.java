@@ -6,11 +6,13 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class ScheduleDAO extends SQLiteOpenHelper{
+
     public ScheduleDAO(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
@@ -21,7 +23,7 @@ public class ScheduleDAO extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table schedule(_id integer primary key autoincrement, title text, date timestamp)");
+        db.execSQL("create table schedule(db_id integer primary key autoincrement, title text, date timestamp)");
     }
 
     @Override
@@ -35,26 +37,33 @@ public class ScheduleDAO extends SQLiteOpenHelper{
         db.close();
     }
 
-    public HashMap<Long,ScheduleBean> getSchedules(int year, int month){
-        HashMap<Long, ScheduleBean> result = new HashMap<>();
+
+    public ArrayList<ScheduleBean> getSchedules(int _year, int _month, int _dayOfMonth){
+        ArrayList<ScheduleBean> result = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                String.format("select * from schedule where %ld <= date and date < %ld",
-                        ymd2timestamp(year,month,1),
-                        ymd2timestamp(year,month+1,1)),null);
+                String.format("select * from schedule where %ld = date order by db_id asc",
+                        ymd2timestamp(_year,_month,_dayOfMonth)),null);
         while(cursor.moveToNext()){
-            result.put(cursor.getLong(2),new ScheduleBean(
+            result.add(new ScheduleBean(
+                    cursor.getInt(0),
                     cursor.getString(1),
-                    cursor.getLong(0)
+                    cursor.getLong(2)
             ));
         }
         return result;
     }
 
     public static class ScheduleBean{
+        public Integer db_id;
         public String title;
         public long timestamp;
         public ScheduleBean(String _title,long _timestamp){
+            title = _title;
+            timestamp = _timestamp;
+        }
+        public ScheduleBean(Integer _db_id, String _title,long _timestamp){
+            db_id = _db_id;
             title = _title;
             timestamp = _timestamp;
         }

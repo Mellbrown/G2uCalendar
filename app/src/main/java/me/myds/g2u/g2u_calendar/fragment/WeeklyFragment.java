@@ -20,9 +20,6 @@ import me.myds.g2u.g2u_calendar.R;
 
 public class WeeklyFragment extends Fragment{
 
-    private TextView txtWeekOfMonth;
-    private FloatingActionButton btnPrev;
-    private FloatingActionButton btnNext;
     private LinearLayout colsWeek;
 
     private ArrayList<WeekItem> weekItems = new ArrayList<>();
@@ -32,9 +29,6 @@ public class WeeklyFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View viewLayout = inflater.inflate(R.layout.fragment_weekly, container,false);
 
-        txtWeekOfMonth = viewLayout.findViewById(R.id.txtWeekOfMonth);
-        btnPrev = viewLayout.findViewById(R.id.btnPrev);
-        btnNext = viewLayout.findViewById(R.id.btnNext);
         colsWeek = viewLayout.findViewById(R.id.colsWeek);
 
         for(int i = 0 ; 7 > i; i++){
