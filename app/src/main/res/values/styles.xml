@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/ic_launcher_background</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/cardview_light_background</item>
+        <item name="colorAccent">@android:color/holo_orange_light</item>
     </style>
 
 </resources>
