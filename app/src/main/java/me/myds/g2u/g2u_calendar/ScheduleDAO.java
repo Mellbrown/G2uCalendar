@@ -38,12 +38,13 @@ public class ScheduleDAO extends SQLiteOpenHelper{
     }
 
 
-    public ArrayList<ScheduleBean> getSchedules(int _year, int _month, int _dayOfMonth){
+    public ArrayList<ScheduleBean> getSchedules(ymd startDate, ymd endDate){
         ArrayList<ScheduleBean> result = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                String.format("select * from schedule where %ld = date order by db_id asc",
-                        ymd2timestamp(_year,_month,_dayOfMonth)),null);
+                String.format("select * from schedule where %ld <= date and date < %ld order by db_id asc",
+                        ymd2timestamp(startDate.year, startDate.month, startDate.dayOfMonth),
+                        ymd2timestamp(endDate.year, endDate.month, endDate.dayOfMonth)),null);
         while(cursor.moveToNext()){
             result.add(new ScheduleBean(
                     cursor.getInt(0),

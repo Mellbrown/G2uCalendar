@@ -19,10 +19,13 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import me.myds.g2u.g2u_calendar.DateChanged;
 import me.myds.g2u.g2u_calendar.R;
+import me.myds.g2u.g2u_calendar.ScheduleDAO;
 
-public class MonthlyFragment extends Fragment{
+public class MonthlyFragment extends Fragment implements DateChanged {
     private TableLayout table;
 
     private ArrayList<TableRow> tableRows = new ArrayList<>();
@@ -59,6 +62,12 @@ public class MonthlyFragment extends Fragment{
 
         return viewLayout;
     }
+
+    @Override
+    public void dateChanged(Calendar calendar) {
+
+    }
+
 
     public static class MonthlyItemView{
         public View itemView;

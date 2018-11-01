@@ -15,10 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import me.myds.g2u.g2u_calendar.DateChanged;
 import me.myds.g2u.g2u_calendar.R;
+import me.myds.g2u.g2u_calendar.ScheduleDAO;
 
-public class WeeklyFragment extends Fragment{
+public class WeeklyFragment extends Fragment implements DateChanged {
 
     private LinearLayout colsWeek;
 
@@ -48,6 +51,12 @@ public class WeeklyFragment extends Fragment{
 
         return viewLayout;
     }
+
+    @Override
+    public void dateChanged(Calendar calendar) {
+
+    }
+
 
     public static class WeekItem{
         public View itemView;

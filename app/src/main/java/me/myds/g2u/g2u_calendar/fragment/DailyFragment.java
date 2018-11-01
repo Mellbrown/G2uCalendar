@@ -13,11 +13,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 import me.myds.g2u.g2u_calendar.BaseRecyclerAdapter;
+import me.myds.g2u.g2u_calendar.DateChanged;
 import me.myds.g2u.g2u_calendar.R;
 import me.myds.g2u.g2u_calendar.ScheduleDAO;
 
-public class DailyFragment extends Fragment{
+public class DailyFragment extends Fragment implements DateChanged {
 
     public RecyclerView lstSchedule;
     private RecyclerView.LayoutManager layoutManager;
@@ -46,6 +50,12 @@ public class DailyFragment extends Fragment{
 
         return viewLayout;
     }
+
+    @Override
+    public void dateChanged(Calendar calendar) {
+
+    }
+
 
     public static class DailyScheduleItem extends RecyclerView.ViewHolder {
         public View itemView;
