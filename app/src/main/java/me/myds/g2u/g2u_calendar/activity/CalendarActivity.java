@@ -5,16 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -69,21 +66,31 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (preferences.getString(LAST_PAGE,MONTH_PAGE)){
             case MONTH_PAGE:
-                fragmentTransaction.add(R.id.frame,new MonthlyFragment(),MONTH_PAGE);
+                MonthlyFragment monthlyFragment = new MonthlyFragment();
+                monthlyFragment.delayDateChanged(calendar,scheduleDAO);
+                fragmentTransaction.add(R.id.frame,monthlyFragment,MONTH_PAGE);
                 fragmentTransaction.commitNow();
+                nav.setSelectedItemId(R.id.nav_monthly);
                 curpage = MONTH_PAGE;
                 break;
             case WEEK_PAGE:
-                fragmentTransaction.add(R.id.frame,new WeeklyFragment(),WEEK_PAGE);
+                WeeklyFragment weeklyFragment = new WeeklyFragment();
+                weeklyFragment.delayDateChanged(calendar,scheduleDAO);
+                fragmentTransaction.add(R.id.frame,weeklyFragment,WEEK_PAGE);
                 fragmentTransaction.commitNow();
+                nav.setSelectedItemId(R.id.nav_weekly);
                 curpage = WEEK_PAGE;
                 break;
             case DAY_PAGE:
-                fragmentTransaction.add(R.id.frame,new DailyFragment(),DAY_PAGE);
+                DailyFragment dailyFragment = new DailyFragment();
+                dailyFragment.delayDateChanged(calendar,scheduleDAO);
+                fragmentTransaction.add(R.id.frame,dailyFragment,DAY_PAGE);
                 fragmentTransaction.commitNow();
+                nav.setSelectedItemId(R.id.nav_daily);
                 curpage = DAY_PAGE;
                 break;
         }
+        setDateText();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -99,6 +106,7 @@ public class CalendarActivity extends AppCompatActivity {
                     fragmentTransaction.replace(R.id.frame, new MonthlyFragment(), MONTH_PAGE);
                     fragmentTransaction.commitNow();
                     curpage = MONTH_PAGE;
+                    setDateText();
                     preferences.edit().putString(LAST_PAGE,MONTH_PAGE).commit();
                     return true;
                 case R.id.nav_weekly:
@@ -107,6 +115,7 @@ public class CalendarActivity extends AppCompatActivity {
                     fragmentTransaction.replace(R.id.frame, new WeeklyFragment(), WEEK_PAGE);
                     fragmentTransaction.commitNow();
                     curpage = WEEK_PAGE;
+                    setDateText();
                     preferences.edit().putString(LAST_PAGE,WEEK_PAGE).commit();
                     return true;
                 case R.id.nav_daily:
@@ -115,6 +124,7 @@ public class CalendarActivity extends AppCompatActivity {
                     fragmentTransaction.replace(R.id.frame, new DailyFragment(), DAY_PAGE);
                     fragmentTransaction.commitNow();
                     curpage = DAY_PAGE;
+                    setDateText();
                     preferences.edit().putString(LAST_PAGE,DAY_PAGE).commit();
                     return true;
             }
@@ -133,7 +143,7 @@ public class CalendarActivity extends AppCompatActivity {
                 calendar.get(Calendar.MONTH)+1,
                 calendar.get(Calendar.WEEK_OF_MONTH)));
                 break;
-            case DAY_PAGE: txtDate.setText(String.format("%년 %월 %d일",
+            case DAY_PAGE: txtDate.setText(String.format("%d년 %d월 %d일",
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH)+1,
                 calendar.get(Calendar.DAY_OF_WEEK)));
@@ -154,7 +164,7 @@ public class CalendarActivity extends AppCompatActivity {
                     }
                     setDateText();
                     DateChanged dateChanged = (DateChanged) fragmentManager.getFragments().get(0);
-                    dateChanged.dateChanged(calendar);
+                    dateChanged.dateChanged(calendar,scheduleDAO);
                 }break;
                 case R.id.btnNext:{
                     switch (curpage){
@@ -164,10 +174,11 @@ public class CalendarActivity extends AppCompatActivity {
                     }
                     setDateText();
                     DateChanged dateChanged = (DateChanged) fragmentManager.getFragments().get(0);
-                    dateChanged.dateChanged(calendar);
+                    dateChanged.dateChanged(calendar,scheduleDAO);
                 }break;
             }
 
         }
     };
+
 }

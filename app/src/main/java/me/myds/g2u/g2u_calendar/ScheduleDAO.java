@@ -42,7 +42,7 @@ public class ScheduleDAO extends SQLiteOpenHelper{
         ArrayList<ScheduleBean> result = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                String.format("select * from schedule where %ld <= date and date < %ld order by db_id asc",
+                String.format("select * from schedule where %d <= date and date < %d order by db_id asc",
                         ymd2timestamp(startDate.year, startDate.month, startDate.dayOfMonth),
                         ymd2timestamp(endDate.year, endDate.month, endDate.dayOfMonth)),null);
         while(cursor.moveToNext()){
@@ -78,7 +78,7 @@ public class ScheduleDAO extends SQLiteOpenHelper{
         }
     }
 
-    public static class ymd{
+    public static class ymd implements Cloneable{
         public int year;
         public int month;
         public int dayOfMonth;
@@ -99,4 +99,6 @@ public class ScheduleDAO extends SQLiteOpenHelper{
         cal.setTimeInMillis(timestamp);
         return new ymd(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH));
     }
+
+
 }

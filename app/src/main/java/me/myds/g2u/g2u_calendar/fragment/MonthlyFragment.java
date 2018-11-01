@@ -1,11 +1,9 @@
 package me.myds.g2u.g2u_calendar.fragment;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -15,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,14 +56,49 @@ public class MonthlyFragment extends Fragment implements DateChanged {
             ));
         }
 
+        if(calendar != null && scheduleDAO != null){
+            dateChanged(this.calendar, this.scheduleDAO);
+        }
         return viewLayout;
     }
 
-    @Override
-    public void dateChanged(Calendar calendar) {
-
+    private Calendar calendar = null;
+    private ScheduleDAO scheduleDAO = null;
+    public void delayDateChanged(Calendar calendar,ScheduleDAO scheduleDAO){
+        this.calendar = calendar ;
+        this.scheduleDAO = scheduleDAO ;
     }
 
+    @Override
+    public void dateChanged(Calendar cal,ScheduleDAO scheduleDAO) {
+        Calendar cl = (Calendar) cal.clone();
+        cl.add(Calendar.MONTH,1);
+        ScheduleDAO.ymd start = new ScheduleDAO.ymd(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, 1);
+        ScheduleDAO.ymd end = new ScheduleDAO.ymd(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH)+1, 1);
+        ArrayList<ScheduleDAO.ScheduleBean> schedules = scheduleDAO.getSchedules(start, end);
+
+        cl = (Calendar) cal.clone();
+        cl.set(Calendar.DAY_OF_MONTH, 1);
+        int startItem = cl.get(Calendar.DAY_OF_WEEK) - 1;
+        int endItem = cl.getActualMaximum(Calendar.DAY_OF_MONTH) + startItem;
+        for(int i = 0 ; monthlyItemes.size() > i ; i++){
+            if(startItem <= i && i < endItem){
+                MonthlyItemView monthlyItemView = monthlyItemes.get(i);
+                monthlyItemView.container.setVisibility(View.VISIBLE);
+                monthlyItemView.txtDayOfMonth.setText((i - startItem + 1)+"");
+                monthlyItemView.card.setVisibility(View.INVISIBLE);
+                monthlyItemView.cntSchedule = 0;
+            } else
+                monthlyItemes.get(i).container.setVisibility(View.INVISIBLE);
+        }
+
+        for(ScheduleDAO.ScheduleBean scheduleBean : schedules){
+            MonthlyItemView monthlyItemView = monthlyItemes.get(scheduleBean.getYmd().dayOfMonth + startItem - 1);
+            monthlyItemView.card.setVisibility(View.VISIBLE);
+            monthlyItemView.cntSchedule++;
+            monthlyItemView.txtCntSchedule.setText("+ " + monthlyItemView.cntSchedule);
+        }
+    }
 
     public static class MonthlyItemView{
         public View itemView;
@@ -75,7 +106,8 @@ public class MonthlyFragment extends Fragment implements DateChanged {
         public ImageView imgWeek;
         public TextView txtDayOfMonth;
         public CardView card;
-        public TextView cntSchedule;
+        public TextView txtCntSchedule;
+        public int cntSchedule = 0;
 
         public MonthlyItemView(View _itemView){
             itemView = _itemView;
@@ -83,7 +115,7 @@ public class MonthlyFragment extends Fragment implements DateChanged {
             imgWeek = itemView.findViewById(R.id.imgWeek);
             txtDayOfMonth = itemView.findViewById(R.id.txtDayOfMonth);
             card = itemView.findViewById(R.id.card);
-            cntSchedule = itemView.findViewById(R.id.cntSchedule);
+            txtCntSchedule = itemView.findViewById(R.id.cntSchedule);
         }
     }
 }

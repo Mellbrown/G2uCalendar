@@ -3,14 +3,12 @@ package me.myds.g2u.g2u_calendar.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,7 +24,6 @@ public class DailyFragment extends Fragment implements DateChanged {
     public RecyclerView lstSchedule;
     private RecyclerView.LayoutManager layoutManager;
     public BaseRecyclerAdapter<ScheduleDAO.ScheduleBean, DailyScheduleItem> adapter;
-
 
     @Nullable
     @Override
@@ -48,13 +45,30 @@ public class DailyFragment extends Fragment implements DateChanged {
         lstSchedule.setLayoutManager(layoutManager);
         lstSchedule.setAdapter(adapter);
 
+        if(calendar != null && scheduleDAO != null){
+            dateChanged(this.calendar, this.scheduleDAO);
+        }
         return viewLayout;
     }
 
-    @Override
-    public void dateChanged(Calendar calendar) {
-
+    private Calendar calendar = null;
+    private ScheduleDAO scheduleDAO = null;
+    public void delayDateChanged(Calendar calendar,ScheduleDAO scheduleDAO){
+        this.calendar = calendar ;
+        this.scheduleDAO = scheduleDAO ;
     }
+
+    @Override
+    public void dateChanged(Calendar calendar,ScheduleDAO scheduleDAO) {
+        Calendar cal = (Calendar) calendar.clone();
+        ScheduleDAO.ymd start = ScheduleDAO.timestamp2ymd(cal.getTimeInMillis());
+        cal.add(Calendar.DAY_OF_MONTH, +1);
+        ScheduleDAO.ymd end = ScheduleDAO.timestamp2ymd(cal.getTimeInMillis());
+        ArrayList<ScheduleDAO.ScheduleBean> schedules = scheduleDAO.getSchedules(start, end);
+        adapter.dataList = schedules;
+        adapter.notifyDataSetChanged();
+    }
+
 
 
     public static class DailyScheduleItem extends RecyclerView.ViewHolder {
