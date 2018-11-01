@@ -79,7 +79,7 @@ public class WeeklyFragment extends Fragment implements DateChanged {
         ArrayList<ScheduleDAO.ScheduleBean> schedules = scheduleDAO.getSchedules(start, end);
         for(ScheduleDAO.ScheduleBean scheduleBean: schedules){
             cal.setTimeInMillis(scheduleBean.timestamp);
-            WeekItem weekItem = weekItems.get(cal.get(Calendar.DAY_OF_WEEK));
+            WeekItem weekItem = weekItems.get(cal.get(Calendar.DAY_OF_WEEK)-1);
             weekItem.adapter.dataList.add(scheduleBean);
             weekItem.adapter.notifyItemInserted(weekItem.adapter.dataList.size()-1);
         }
