@@ -69,6 +69,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         nav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        scheduleDAO = ScheduleDAO.getInstance(this);
 
         calendar = new GregorianCalendar();
         calendar.setTime(new Date());
@@ -106,18 +107,21 @@ public class CalendarActivity extends AppCompatActivity {
                     if(curpage.equals(MONTH_PAGE)) return true;
                     curpage = MONTH_PAGE;
                     preferences.edit().putString(LAST_PAGE,MONTH_PAGE).apply();
+                    calendar.setTime(new Date());
                     setFragment(new MonthlyFragment(), MONTH_PAGE);
                     return true;
                 case R.id.nav_weekly:
                     if(curpage.equals(WEEK_PAGE)) return true;
                     curpage = WEEK_PAGE;
                     preferences.edit().putString(LAST_PAGE,WEEK_PAGE).apply();
+                    calendar.setTime(new Date());
                     setFragment(new WeeklyFragment(), WEEK_PAGE);
                     return true;
                 case R.id.nav_daily:
                     if(curpage.equals(DAY_PAGE)) return true;
                     curpage = DAY_PAGE;
                     preferences.edit().putString(LAST_PAGE,DAY_PAGE).apply();
+                    calendar.setTime(new Date());
                     setFragment(new DailyFragment(), DAY_PAGE);
                     return true;
             }
@@ -139,7 +143,7 @@ public class CalendarActivity extends AppCompatActivity {
             case DAY_PAGE: txtDate.setText(String.format("%d년 %d월 %d일",
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH)+1,
-                calendar.get(Calendar.DAY_OF_WEEK)));
+                calendar.get(Calendar.DAY_OF_MONTH)));
                 break;
         }
     }
@@ -178,7 +182,8 @@ public class CalendarActivity extends AppCompatActivity {
             String resultTitle = data.getStringExtra(AddScheduleActivity.RESULT_TITLE);
             long resultDate = data.getLongExtra(AddScheduleActivity.RESULT_DATE, 0);
             scheduleDAO.addSchedule(new ScheduleDAO.ScheduleBean(resultTitle,resultDate));
-
+            DateChanged dateChanged = (DateChanged) fragmentManager.getFragments().get(0);
+            dateChanged.dateChanged(calendar);
         }
     }
 }

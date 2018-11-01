@@ -1,7 +1,6 @@
 <resources>
-    <string name="app_name">G2u-Calendar</string>
-
-
+    <string name="app_name">뀨 캘린더</string>
+    
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>

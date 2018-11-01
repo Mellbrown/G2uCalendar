@@ -74,7 +74,9 @@ public class WeeklyFragment extends Fragment implements DateChanged {
             weekItem.adapter.notifyDataSetChanged();
             cal.add(Calendar.DAY_OF_WEEK,+1);
         }
+        cal.add(Calendar.DAY_OF_MONTH,-7);
         ScheduleDAO.ymd start = ScheduleDAO.timestamp2ymd(calendar.getTimeInMillis());
+        cal.add(Calendar.DAY_OF_MONTH,+7);
         ScheduleDAO.ymd end = ScheduleDAO.timestamp2ymd(cal.getTimeInMillis());
         ArrayList<ScheduleDAO.ScheduleBean> schedules = scheduleDAO.getSchedules(start, end);
         for(ScheduleDAO.ScheduleBean scheduleBean: schedules){
