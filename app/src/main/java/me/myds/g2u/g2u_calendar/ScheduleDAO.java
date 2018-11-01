@@ -33,7 +33,7 @@ public class ScheduleDAO extends SQLiteOpenHelper{
 
     public void addSchedule(ScheduleBean schedule){
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL( String.format("insert into schedule(title, date) values(%s, %ld)",schedule.title, schedule.timestamp));
+        db.execSQL( String.format("insert into schedule(title, date) values('%s', '%d')",schedule.title, schedule.timestamp));
         db.close();
     }
 

@@ -1,5 +1,6 @@
 package me.myds.g2u.g2u_calendar.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +39,7 @@ public class CalendarActivity extends AppCompatActivity {
     private TextView txtDate;
     private FloatingActionButton btnPrev;
     private FloatingActionButton btnNext;
+    private FloatingActionButton btnAdd;
 
     private Calendar calendar;
     ScheduleDAO scheduleDAO;
@@ -51,9 +53,16 @@ public class CalendarActivity extends AppCompatActivity {
         txtDate = findViewById(R.id.txtDate);
         btnPrev = findViewById(R.id.btnPrev);
         btnNext = findViewById(R.id.btnNext);
+        btnAdd = findViewById(R.id.btnAdd);
 
         btnPrev.setOnClickListener(onClickDateMoveListener);
         btnNext.setOnClickListener(onClickDateMoveListener);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(CalendarActivity.this, AddScheduleActivity.class),1);
+            }
+        });
 
         fragmentManager = getSupportFragmentManager();
         nav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -177,8 +186,16 @@ public class CalendarActivity extends AppCompatActivity {
                     dateChanged.dateChanged(calendar,scheduleDAO);
                 }break;
             }
-
         }
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode ==1 && resultCode == 1){
+            String resultTitle = data.getStringExtra(AddScheduleActivity.RESULT_TITLE);
+            long resultDate = data.getLongExtra(AddScheduleActivity.RESULT_DATE, 0);
+            scheduleDAO.addSchedule(new ScheduleDAO.ScheduleBean(resultTitle,resultDate));
+
+        }
+    }
 }
