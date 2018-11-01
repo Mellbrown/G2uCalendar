@@ -16,10 +16,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import me.myds.g2u.g2u_calendar.DateChanged;
 import me.myds.g2u.g2u_calendar.R;
 import me.myds.g2u.g2u_calendar.ScheduleDAO;
+import me.myds.g2u.g2u_calendar.activity.CalendarActivity;
 
 public class MonthlyFragment extends Fragment implements DateChanged {
     private TableLayout table;
@@ -56,21 +58,16 @@ public class MonthlyFragment extends Fragment implements DateChanged {
             ));
         }
 
-        if(calendar != null && scheduleDAO != null){
-            dateChanged(this.calendar, this.scheduleDAO);
-        }
+        long timestamp = getArguments().getLong(CalendarActivity.ARG_TIMESTAMP);
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(timestamp);
+        dateChanged(cal);
         return viewLayout;
     }
 
-    private Calendar calendar = null;
-    private ScheduleDAO scheduleDAO = null;
-    public void delayDateChanged(Calendar calendar,ScheduleDAO scheduleDAO){
-        this.calendar = calendar ;
-        this.scheduleDAO = scheduleDAO ;
-    }
-
     @Override
-    public void dateChanged(Calendar cal,ScheduleDAO scheduleDAO) {
+    public void dateChanged(Calendar cal) {
+        ScheduleDAO scheduleDAO = ScheduleDAO.getInstance(getContext());
         Calendar cl = (Calendar) cal.clone();
         cl.add(Calendar.MONTH,1);
         ScheduleDAO.ymd start = new ScheduleDAO.ymd(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, 1);

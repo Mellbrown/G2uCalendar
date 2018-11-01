@@ -1,11 +1,13 @@
 package me.myds.g2u.g2u_calendar.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +32,7 @@ public class CalendarActivity extends AppCompatActivity {
     private BottomNavigationView nav;
 
     private SharedPreferences preferences;
-    private String curpage;
+    private String curpage = "";
     public static final String LAST_PAGE = "LAST_PAGE";
     public static final String MONTH_PAGE = "MONTH_PAGE";
     public static final String WEEK_PAGE = "WEEK_PAGE";
@@ -43,6 +45,7 @@ public class CalendarActivity extends AppCompatActivity {
 
     private Calendar calendar;
     ScheduleDAO scheduleDAO;
+    public static final String ARG_TIMESTAMP = "ARG_TIMESTAMP";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,36 +72,27 @@ public class CalendarActivity extends AppCompatActivity {
 
         calendar = new GregorianCalendar();
         calendar.setTime(new Date());
-        scheduleDAO = new ScheduleDAO(this,"g2u-calendar.db",null,1);
 
         preferences = getSharedPreferences(LAST_PAGE,MODE_PRIVATE);
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (preferences.getString(LAST_PAGE,MONTH_PAGE)){
             case MONTH_PAGE:
-                MonthlyFragment monthlyFragment = new MonthlyFragment();
-                monthlyFragment.delayDateChanged(calendar,scheduleDAO);
-                fragmentTransaction.add(R.id.frame,monthlyFragment,MONTH_PAGE);
-                fragmentTransaction.commitNow();
                 nav.setSelectedItemId(R.id.nav_monthly);
-                curpage = MONTH_PAGE;
                 break;
             case WEEK_PAGE:
-                WeeklyFragment weeklyFragment = new WeeklyFragment();
-                weeklyFragment.delayDateChanged(calendar,scheduleDAO);
-                fragmentTransaction.add(R.id.frame,weeklyFragment,WEEK_PAGE);
-                fragmentTransaction.commitNow();
                 nav.setSelectedItemId(R.id.nav_weekly);
-                curpage = WEEK_PAGE;
                 break;
             case DAY_PAGE:
-                DailyFragment dailyFragment = new DailyFragment();
-                dailyFragment.delayDateChanged(calendar,scheduleDAO);
-                fragmentTransaction.add(R.id.frame,dailyFragment,DAY_PAGE);
-                fragmentTransaction.commitNow();
                 nav.setSelectedItemId(R.id.nav_daily);
-                curpage = DAY_PAGE;
                 break;
         }
+    }
+    private void setFragment(Fragment fragment,String fragmentTag){
+        Bundle arg = new Bundle();
+        arg.putLong(ARG_TIMESTAMP, calendar.getTimeInMillis());
+        fragment.setArguments(arg);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame,fragment,fragmentTag);
+        fragmentTransaction.commit();
         setDateText();
     }
 
@@ -107,34 +101,24 @@ public class CalendarActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction fragmentTransaction;
             switch (item.getItemId()) {
                 case R.id.nav_monthly:
-                    if(curpage == MONTH_PAGE) return true;
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame, new MonthlyFragment(), MONTH_PAGE);
-                    fragmentTransaction.commitNow();
+                    if(curpage.equals(MONTH_PAGE)) return true;
                     curpage = MONTH_PAGE;
-                    setDateText();
-                    preferences.edit().putString(LAST_PAGE,MONTH_PAGE).commit();
+                    preferences.edit().putString(LAST_PAGE,MONTH_PAGE).apply();
+                    setFragment(new MonthlyFragment(), MONTH_PAGE);
                     return true;
                 case R.id.nav_weekly:
-                    if(curpage == WEEK_PAGE) return true;
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame, new WeeklyFragment(), WEEK_PAGE);
-                    fragmentTransaction.commitNow();
+                    if(curpage.equals(WEEK_PAGE)) return true;
                     curpage = WEEK_PAGE;
-                    setDateText();
-                    preferences.edit().putString(LAST_PAGE,WEEK_PAGE).commit();
+                    preferences.edit().putString(LAST_PAGE,WEEK_PAGE).apply();
+                    setFragment(new WeeklyFragment(), WEEK_PAGE);
                     return true;
                 case R.id.nav_daily:
-                    if(curpage == DAY_PAGE) return true;
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame, new DailyFragment(), DAY_PAGE);
-                    fragmentTransaction.commitNow();
+                    if(curpage.equals(DAY_PAGE)) return true;
                     curpage = DAY_PAGE;
-                    setDateText();
-                    preferences.edit().putString(LAST_PAGE,DAY_PAGE).commit();
+                    preferences.edit().putString(LAST_PAGE,DAY_PAGE).apply();
+                    setFragment(new DailyFragment(), DAY_PAGE);
                     return true;
             }
             return false;
@@ -163,7 +147,6 @@ public class CalendarActivity extends AppCompatActivity {
     private View.OnClickListener onClickDateMoveListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
             switch (v.getId()){
                 case R.id.btnPrev:{
                     switch (curpage){
@@ -173,7 +156,7 @@ public class CalendarActivity extends AppCompatActivity {
                     }
                     setDateText();
                     DateChanged dateChanged = (DateChanged) fragmentManager.getFragments().get(0);
-                    dateChanged.dateChanged(calendar,scheduleDAO);
+                    dateChanged.dateChanged(calendar);
                 }break;
                 case R.id.btnNext:{
                     switch (curpage){
@@ -183,7 +166,7 @@ public class CalendarActivity extends AppCompatActivity {
                     }
                     setDateText();
                     DateChanged dateChanged = (DateChanged) fragmentManager.getFragments().get(0);
-                    dateChanged.dateChanged(calendar,scheduleDAO);
+                    dateChanged.dateChanged(calendar);
                 }break;
             }
         }

@@ -13,6 +13,13 @@ import java.util.HashMap;
 
 public class ScheduleDAO extends SQLiteOpenHelper{
 
+    private static ScheduleDAO instance = null;
+    public static ScheduleDAO getInstance(Context context){
+        if(instance == null)
+            instance = new ScheduleDAO(context,"g2u-calendar.db",null,1);
+        return instance;
+    }
+
     public ScheduleDAO(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }

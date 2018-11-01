@@ -13,11 +13,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import me.myds.g2u.g2u_calendar.BaseRecyclerAdapter;
 import me.myds.g2u.g2u_calendar.DateChanged;
 import me.myds.g2u.g2u_calendar.R;
 import me.myds.g2u.g2u_calendar.ScheduleDAO;
+import me.myds.g2u.g2u_calendar.activity.CalendarActivity;
 
 public class DailyFragment extends Fragment implements DateChanged {
 
@@ -45,21 +47,16 @@ public class DailyFragment extends Fragment implements DateChanged {
         lstSchedule.setLayoutManager(layoutManager);
         lstSchedule.setAdapter(adapter);
 
-        if(calendar != null && scheduleDAO != null){
-            dateChanged(this.calendar, this.scheduleDAO);
-        }
+        long timestamp = getArguments().getLong(CalendarActivity.ARG_TIMESTAMP);
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(timestamp);
+        dateChanged(cal);
         return viewLayout;
     }
 
-    private Calendar calendar = null;
-    private ScheduleDAO scheduleDAO = null;
-    public void delayDateChanged(Calendar calendar,ScheduleDAO scheduleDAO){
-        this.calendar = calendar ;
-        this.scheduleDAO = scheduleDAO ;
-    }
-
     @Override
-    public void dateChanged(Calendar calendar,ScheduleDAO scheduleDAO) {
+    public void dateChanged(Calendar calendar) {
+        ScheduleDAO scheduleDAO = ScheduleDAO.getInstance(getContext());
         Calendar cal = (Calendar) calendar.clone();
         ScheduleDAO.ymd start = ScheduleDAO.timestamp2ymd(cal.getTimeInMillis());
         cal.add(Calendar.DAY_OF_MONTH, +1);

@@ -4,5 +4,5 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public interface DateChanged {
-    void dateChanged(Calendar calendar, ScheduleDAO scheduleDAO);
+    void dateChanged(Calendar calendar);
 }
