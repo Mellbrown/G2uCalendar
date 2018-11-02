@@ -135,10 +135,13 @@ public class CalendarActivity extends AppCompatActivity {
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH)+1));
                 break;
-            case WEEK_PAGE: txtDate.setText(String.format("%d년 %d월 %d주",
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH)+1,
-                calendar.get(Calendar.WEEK_OF_MONTH)));
+            case WEEK_PAGE:
+                Calendar conlone = (Calendar) calendar.clone();
+                conlone.set(Calendar.DAY_OF_WEEK, 7);
+                txtDate.setText(String.format("%d년 %d월 %d주",
+                        conlone.get(Calendar.YEAR),
+                        conlone.get(Calendar.MONTH)+1,
+                        conlone.get(Calendar.WEEK_OF_MONTH)));
                 break;
             case DAY_PAGE: txtDate.setText(String.format("%d년 %d월 %d일",
                 calendar.get(Calendar.YEAR),

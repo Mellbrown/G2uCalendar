@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,9 +75,9 @@ public class WeeklyFragment extends Fragment implements DateChanged {
             weekItem.adapter.notifyDataSetChanged();
             cal.add(Calendar.DAY_OF_WEEK,+1);
         }
-        cal.add(Calendar.DAY_OF_MONTH,-7);
-        ScheduleDAO.ymd start = ScheduleDAO.timestamp2ymd(calendar.getTimeInMillis());
-        cal.add(Calendar.DAY_OF_MONTH,+7);
+        cal.add(Calendar.DAY_OF_WEEK,-7);
+        ScheduleDAO.ymd start = ScheduleDAO.timestamp2ymd(cal.getTimeInMillis());
+        cal.add(Calendar.DAY_OF_WEEK,+7);
         ScheduleDAO.ymd end = ScheduleDAO.timestamp2ymd(cal.getTimeInMillis());
         ArrayList<ScheduleDAO.ScheduleBean> schedules = scheduleDAO.getSchedules(start, end);
         for(ScheduleDAO.ScheduleBean scheduleBean: schedules){

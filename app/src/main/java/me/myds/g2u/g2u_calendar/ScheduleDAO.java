@@ -85,7 +85,7 @@ public class ScheduleDAO extends SQLiteOpenHelper{
         }
     }
 
-    public static class ymd implements Cloneable{
+    public static class ymd{
         public int year;
         public int month;
         public int dayOfMonth;
@@ -94,6 +94,11 @@ public class ScheduleDAO extends SQLiteOpenHelper{
             year = _year;
             month = _month;
             dayOfMonth = _dayOfMonth;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%d년 %d월 %d일", year,month,dayOfMonth);
         }
     }
     public static long ymd2timestamp(int year, int month, int dayOfMonth){
