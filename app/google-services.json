@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "534659071807",
+    "firebase_url": "https://g2ucalendar.firebaseio.com",
+    "project_id": "g2ucalendar",
+    "storage_bucket": "g2ucalendar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534659071807:android:e785b8f3e99b8ea2",
+        "android_client_info": {
+          "package_name": "me.myds.g2u.g2u_calendar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "534659071807-qn6jukeu2crhp6i58meij734nhq6t97e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.myds.g2u.g2u_calendar",
+            "certificate_hash": "7afd5457409c14b62727b75af517f15c3861c84a"
+          }
+        },
+        {
+          "client_id": "534659071807-7f4hdaejqih1cgc6kem2c5fh8vlsfts2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG31_0YGwamQmdscm1Fd2LGSByzSp-2lk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "534659071807-7f4hdaejqih1cgc6kem2c5fh8vlsfts2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
